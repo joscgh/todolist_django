@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="col-3 mx-auto">
+  <form method="post" action="{% url 'login' %}">
+    {% csrf_token %}
+
+    {{ form }}
+    <input type="submit" class="btn btn-lg btn-primary btn-block" value="login" />
+    <input type="hidden" name="next" value="{{ next }}" />
+  </form>
+</div>
+
+{# Assumes you setup the password_reset view in your URLconf #}
+<p><a href="{% url 'password_reset' %}">Lost password?</a></p>
+</div>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $("input[type='text'], input[type='password']").addClass("form-control");
+    $("input[type='submit']").addClass("mt-4");
+  });
+</script>
+{% endblock %}
