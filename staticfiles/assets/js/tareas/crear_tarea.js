@@ -1,15 +1,50 @@
-moment.locale("es");
+moment.locale('es');
+var now = $("#now").val();
+
+function humanizeDate(date)
+{
+    var delta = Math.round((+new Date - date) / 1000);
+
+    var minute = 60,
+        hour = minute * 60,
+        day = hour * 24,
+        week = day * 7;
+
+    var fuzzy;
+
+    if (delta < 30) {
+        fuzzy = 'just then.';
+    } else if (delta < minute) {
+        fuzzy = delta + ' seconds ago.';
+    } else if (delta < 2 * minute) {
+        fuzzy = 'a minute ago.'
+    } else if (delta < hour) {
+        fuzzy = Math.floor(delta / minute) + ' minutes ago.';
+    } else if (Math.floor(delta / hour) == 1) {
+        fuzzy = '1 hour ago.'
+    } else if (delta < day) {
+        fuzzy = Math.floor(delta / hour) + ' hours ago.';
+    } else if (delta < day * 2) {
+        fuzzy = 'yesterday';
+    }
+}
 
 $(".tarea").hide();
 $(document).ready(function(){
     $("#id_fecha_venc").datepicker({
         format:"yyyy-mm-dd",
-        language: 'es'
+        language: 'es',
+        todayHighlight: true,
+        todayBtn: true,
+        startDate: moment(now).format("YYYY-MM-DD"),
     });
     $.get("list_tareas/", function(data){
         str = "";
         $.each(data,function(key,value){
-            str += "<span class=''>"+value.fields.nombre+"</span><span class='float-right text-muted'>"+value.fields.fecha_venc+"</span><br>";
+            str += "<div class='custom-control custom-checkbox mb-1' title='Marcar como resuelta'>"+
+                    "<input type='checkbox' class='custom-control-input' id='customCheck"+key+"' data-tarea='"+value.pk+"'>"+
+                    "<label class='custom-control-label' for='customCheck"+key+"'>"+
+                    "<span class=''>"+value.fields.nombre+"</span></label><span class='float-right text-muted'>"+moment(value.fields.fecha_venc).fromNow()+"</span></div>";
         });
         $(".list-tareas").html(str);
     });
@@ -22,6 +57,25 @@ $(document).ready(function(){
 		$(".tarea").hide();
 		$(".add_tarea").show();
 	});
+
+    $(document).on("click","input[type='checkbox']", function(){
+        var id_tarea = $(this).data("tarea");
+        $.get("check_tarea/"+id_tarea+"/", function(data){
+            console.log(data);
+            $.get("list_tareas/", function(data){
+                    str = "";
+                    $(".list-tareas").html("");
+                    $.each(data,function(key,value){
+                        str +=  "<div class='custom-control custom-checkbox mb-1' title='Marcar como resuelta'>"+
+                                "<input type='checkbox' class='custom-control-input' id='customCheck"+key+"' data-tarea='"+value.pk+"'>"+
+                                "<label class='custom-control-label' for='customCheck"+key+"'>"+
+                                "<input type='checkbox' class='custom-control-input' />"+
+                                "<span class=''>"+value.fields.nombre+"</span></label><span class='float-right text-muted'>"+moment(value.fields.fecha_venc).fromNow()+"</span></div>";
+                    });
+                    $(".list-tareas").html(str);
+                });
+        });
+    });
 
 	$("#form-save-tarea").on("submit", function(e){
 		e.preventDefault();
@@ -42,7 +96,16 @@ $(document).ready(function(){
                 $(".add_tarea").show();
                 
                 $.get("list_tareas/", function(data){
-                    console.log(data)
+                    str = "";
+                    $(".list-tareas").html("");
+                    $.each(data,function(key,value){
+                        str +=  "<div class='custom-control custom-checkbox mb-1'>"+
+                                "<input type='checkbox' class='custom-control-input' id='customCheck"+key+"' data-tarea='"+value.pk+"'>"+
+                                "<label class='custom-control-label' for='customCheck"+key+"'>"+
+                                "<input type='checkbox' class='custom-control-input' />"+
+                                "<span class=''>"+value.fields.nombre+"</span></label><span class='float-right text-muted'>"+moment(value.fields.fecha_venc).fromNow()+"</span></div>";
+                    });
+                    $(".list-tareas").html(str);
                 });
         	},
 

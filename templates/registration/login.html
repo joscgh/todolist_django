@@ -3,7 +3,9 @@
 {% load widget_tweaks %}
 
 {% block content %}
-<div class="col-3 mx-auto">
+<div class="col-3 mx-auto border p-4" style="min-width: 220px!important">
+  <div class="mb-5"><span class="float-left mt-1"><h5>Login</h5></span><span class="float-right"><a href="/register/" class="btn btn-outline-primary">Sign Up</a></span></div>
+  <hr>
   <form method="post" action="{% url 'login' %}">
     {% csrf_token %}
 
@@ -12,9 +14,6 @@
     <input type="hidden" name="next" value="{{ next }}" />
   </form>
 </div>
-
-{# Assumes you setup the password_reset view in your URLconf #}
-<p><a href="{% url 'password_reset' %}">Lost password?</a></p>
 </div>
 <script type="text/javascript">
   $(document).ready(function(){

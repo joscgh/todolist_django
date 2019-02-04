@@ -5,19 +5,19 @@
 
 {% block content %}
 <div class="col-md-3">
-	<span class="h5">TodoList Demo</span>
+	<div><span class="h5">TodoList Demo</span></div>
 	Todas<br>
 	Completadas<br>
 	Pendientes<br>
 </div>
 <div class="col-md-9">
 	<div class="list-tareas"></div>
-	<button class="btn btn-primary add_tarea"><i class="fas fa-plus"></i> Agregar Tarea</button>
-	<div class="tarea">
+	<button class="btn btn-primary add_tarea mt-3"><i class="fas fa-plus"></i> Agregar Tarea</button>
+	<div class="tarea mt-3">
 		<form method="post" action="" id="form-save-tarea">
 			{% csrf_token %}
 			Nombre: <input class='form-control mb-2' type='text' name="tarea" id="id_tarea" />
-			Fecha: <input class='form-control mb-2' type='datetime' name="fecha_venc" id="id_fecha_venc" />
+			Programar: <input class='form-control mb-2' type='datetime' name="fecha_venc" id="id_fecha_venc" />
 			Prioridad: <select class="form-control mb-2" name="priori" id="id_priori">
 				<option value="Prioridad 1">Prioridad 1</option>
 				<option value="Prioridad 2">Prioridad 2</option>
@@ -30,5 +30,6 @@
 	</div>
 </div>
 <input type="hidden" name="" value="{{ csrf_token }}" id="token">
+<input type="hidden" name="" id="now" value="{% now 'c' %}">
 <script type="text/javascript" src="{% static 'assets/js/tareas/crear_tarea.js' %}"></script>
 {% endblock %}

@@ -3,7 +3,7 @@
 {% load widget_tweaks %}
 
 {% block content%}
-<div class="col-md-6 mx-auto">
+<div class="col-md-6 mx-auto border p-4" style="min-width: 320px!important">
 	<form method="POST" action="">
     	{% csrf_token %}
     	{{ form }}

@@ -29,5 +29,13 @@ def create_tarea(request):
 		return HttpResponse(json.dumps({"nothing to see": "this isn't happening"}),content_type="application/json")
 
 def list_tareas(request):
-	data = serializers.serialize("json", list(tarea.objects.all()))
+	data = serializers.serialize("json", list(tarea.objects.filter(resuelta=False)))
+	return HttpResponse(data,content_type="application/json")
+
+def check_tarea(request, id_tarea):
+	t = tarea.objects.get(id=id_tarea)
+	t.resuelta = True  # change field
+	t.save() # this will update only
+	print(t)
+	data = serializers.serialize("json", tarea.objects.filter(id=id_tarea))
 	return HttpResponse(data,content_type="application/json")
